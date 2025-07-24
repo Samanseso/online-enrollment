@@ -15,6 +15,11 @@ export interface NavGroup {
     items: NavItem[];
 }
 
+export interface NavCategory {
+    category: string;
+    items: NavItem[];
+}
+
 export interface NavItem {
     title: string;
     href: string;

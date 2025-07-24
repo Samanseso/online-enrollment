@@ -2,16 +2,40 @@ import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { type NavItem } from '@/types';
+import { type NavItem, NavCategory } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Bell, Users, BookOpenText, Presentation, SquareActivity, Banknote, FileClock, ChartLine } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const mainNavItems: NavCategory[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
+        category: 'General',
+        items: [
+            { title: 'Dashboard', href: '/dashboard', icon: LayoutGrid },
+            { title: 'Notifications', href: '/notifications', icon: Bell },
+        ],
+    },
+    {
+        category: 'Academic Management',
+        items: [
+            { title: 'User Management', href: '/user_management', icon: Users },
+            { title: 'Program & Course Setup', href: '/programs-courses', icon: BookOpenText },
+            { title: 'Section Management', href: '/sections', icon: Presentation },
+            { title: 'Enrollment Tracker', href: '/enrollment-tracker', icon: SquareActivity },
+        ],
+    },
+    {
+        category: 'Finance',
+            items: [
+            { title: 'Payment Oversight', href: '/payments', icon: Banknote },
+        ],
+    },
+    {
+        category: 'Analytics & Logs',
+            items: [
+            { title: 'Reports & Analytics', href: '/reports', icon: ChartLine },
+            { title: 'Audit Logs', href: '/audit-logs', icon: FileClock },
+        ],
     },
 ];
 
@@ -44,7 +68,7 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain categories={mainNavItems} />
             </SidebarContent>
 
             <SidebarFooter>
