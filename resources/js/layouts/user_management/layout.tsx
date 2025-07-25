@@ -36,11 +36,12 @@ const tabItems: TabItem[] = [
 interface UserManagementLayoutProps {
     columns: string[]
     visibleColumns: number[];
+    setSearchInput: React.Dispatch<React.SetStateAction<string>>;
     setVisibleColumns: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
 
-export default function UserManagementLayout({ columns, children, visibleColumns, setVisibleColumns }: PropsWithChildren<UserManagementLayoutProps>) {
+export default function UserManagementLayout({ columns, children, visibleColumns, setSearchInput, setVisibleColumns }: PropsWithChildren<UserManagementLayoutProps>) {
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
@@ -49,6 +50,13 @@ export default function UserManagementLayout({ columns, children, visibleColumns
 
     const isMobile = useIsMobile();
     const cleanup = useMobileNavigation();
+    
+
+
+    const handleSearchBarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        // Handle search bar input change
+        setSearchInput(event.target.value);
+    }
 
     return (
         <div className="px-4 py-6">
@@ -71,6 +79,7 @@ export default function UserManagementLayout({ columns, children, visibleColumns
 
                             <DropdownMenuContent 
                                 className="w-40 mt-1 p-2 rounded-xl border border-white/5 bg-white shadow"
+                                align='start'
                             >
                                 <ColumnsMenu columns={columns} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns}/>
                             </DropdownMenuContent>
@@ -79,7 +88,7 @@ export default function UserManagementLayout({ columns, children, visibleColumns
                 </div>
 
                 <div className='flex items-center space-x-2'>
-                    <SearchBar />
+                    <SearchBar onChange={handleSearchBarChange} />
 
                     <Button
                         variant="outline"
