@@ -3,8 +3,8 @@
 export function DataTable ({ columns = [], data = [] }: {columns: string[], data: any[][]}) {
 
 	return (
-		<div className="overflow-x-auto">
-			<table className="">
+		<div className="w-full overflow-x-auto">
+			<table className="w-full">
 				<thead>
 					<tr>
 					{columns.map((col) => (

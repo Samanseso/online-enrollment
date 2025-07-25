@@ -1,10 +1,17 @@
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { type PropsWithChildren } from 'react';
+import { useState, type PropsWithChildren } from 'react';
 import { type TabItem } from '@/types';
 import { LargeTableTab, SmallTableTab } from '@/components/table-tab';
 import { SearchBar } from '@/components/search-bar';
 import { useIsMobile } from '@/hooks/use-mobile';
+
+import { ChevronsUpDown } from 'lucide-react';
+import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
+import { ColumnsMenu } from '@/components/columns-menu';
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+
+
 
 const tabItems: TabItem[] = [
     {
@@ -28,15 +35,20 @@ const tabItems: TabItem[] = [
 
 interface UserManagementLayoutProps {
     columns: string[]
+    visibleColumns: number[];
+    setVisibleColumns: React.Dispatch<React.SetStateAction<number[]>>;
 }
 
-export default function UserManagementLayout({ columns, children }: PropsWithChildren<UserManagementLayoutProps>) {
+
+export default function UserManagementLayout({ columns, children, visibleColumns, setVisibleColumns }: PropsWithChildren<UserManagementLayoutProps>) {
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
     }
 
+
     const isMobile = useIsMobile();
+    const cleanup = useMobileNavigation();
 
     return (
         <div className="px-4 py-6">
@@ -49,11 +61,20 @@ export default function UserManagementLayout({ columns, children }: PropsWithChi
                         {/* Tabs for small devices */}
                         <SmallTableTab tabItems={tabItems} />
 
-                        <div>
-                            <Button>
-                                Columns
-                            </Button>
-                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant='outline' onClick={cleanup}>
+                                    Columns
+                                    <ChevronsUpDown className="ml-2 size-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent 
+                                className="w-40 mt-1 p-2 rounded-xl border border-white/5 bg-white shadow"
+                            >
+                                <ColumnsMenu columns={columns} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns}/>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </div>
                 </div>
 

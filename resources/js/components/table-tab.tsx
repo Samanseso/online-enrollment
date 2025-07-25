@@ -51,7 +51,7 @@ function SmallTableTab({ tabItems = [] }: { tabItems: TabItem[] }) {
                     <ChevronsUpDown className="ml-2 size-4" />
                 </MenuButton>
                 <MenuItems 
-                    transition
+                    transition = {true}
                     anchor="bottom start"
                     className="w-40 mt-1 p-2 rounded-xl border border-white/5 bg-white shadow"
                 >
