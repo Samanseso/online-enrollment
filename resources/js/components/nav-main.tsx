@@ -1,7 +1,6 @@
 import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavCategory } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
 import { useSidebar } from '@/components/ui/sidebar';
 
 export function NavMain({ categories = [] }: { categories: NavCategory[] }) {

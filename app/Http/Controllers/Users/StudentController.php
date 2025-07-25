@@ -19,7 +19,7 @@ class StudentController extends Student
         // you can switch to paginate(10) if the table grows
         $students = Student::all();
 
-        return Inertia::render('user_management/student-list', [
+        return Inertia::render('user_management/students', [
             'students' => $students,
         ]);
     }

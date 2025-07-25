@@ -1,5 +1,6 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
+import StudentList from '../pages/user_management/students';
 
 export interface Auth {
     user: User;
@@ -45,4 +46,27 @@ export interface User {
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
+}
+
+export interface Student {
+    name: string;
+    id: string;
+    first_name: string;
+    last_name: string;
+    middle_name: string;
+    birth_date: string;
+    gender: string;
+    email: string;
+    contact_number: string;
+    address: string;
+    barangay: string;
+    city: string;
+    program_id: string;
+    year_level: string;
+    status: string;
+}
+
+export interface TabItem {
+    title: string;
+    href: string;
 }
