@@ -25,7 +25,12 @@ const tabItems: TabItem[] = [
     },
 ];
 
-export default function UserManagementLayou({ children }: PropsWithChildren) {
+
+interface UserManagementLayoutProps {
+    columns: string[]
+}
+
+export default function UserManagementLayout({ columns, children }: PropsWithChildren<UserManagementLayoutProps>) {
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
@@ -35,13 +40,21 @@ export default function UserManagementLayou({ children }: PropsWithChildren) {
 
     return (
         <div className="px-4 py-6">
-            <div className='flex flex-col-reverse md:flex-row  justify-between mb-2'>
-                <div className='mt-3 md:mt-0'>
-                    {/* Tabs for large devices */}
-                    <LargeTableTab tabItems={tabItems} />
+            <div className='flex flex-col-reverse md:flex-row md:items-center justify-between mb-2 md:space-x-2'>
+                <div className='flex-1'>
+                    <div className='flex items-center justify-between'>
+                        {/* Tabs for large devices */}
+                        <LargeTableTab tabItems={tabItems} />
 
-                    {/* Tabs for small devices */}
-                    <SmallTableTab tabItems={tabItems} />
+                        {/* Tabs for small devices */}
+                        <SmallTableTab tabItems={tabItems} />
+
+                        <div>
+                            <Button>
+                                Columns
+                            </Button>
+                        </div>
+                    </div>
                 </div>
 
                 <div className='flex items-center space-x-2'>
@@ -55,13 +68,9 @@ export default function UserManagementLayou({ children }: PropsWithChildren) {
                     </Button>
                 </div>
             </div>
-            <Separator />
 
-
-
-
-            <div className="flex-1 md:max-w-2xl">
-                <section className="max-w-xl space-y-12">{children}</section>
+            <div className="w-full mt-4">
+                <section className="w-full">{children}</section>
             </div>
 
         </div>

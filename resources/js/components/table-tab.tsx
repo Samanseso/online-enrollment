@@ -16,7 +16,6 @@ function LargeTableTab({ tabItems = [] }: { tabItems: TabItem[] }) {
             {tabItems.map((tab) => (
                 <Button
                     key={tab.title}
-                    size="sm"
                     variant="ghost"
                     asChild
                     className={cn('w-full justify-start', {
@@ -40,13 +39,12 @@ function SmallTableTab({ tabItems = [] }: { tabItems: TabItem[] }) {
     const currentTab = tabItems.find(tab => tab.href === currentPath) || tabItems[0];
 
     return (
-        <div className='md:hidden flex items-center'>
+        <div className='md:hidden flex items-center '>
             <Menu>
                 <MenuButton
                     as={Button}
-                    size="sm"
                     variant="ghost"
-                    className="justify-between"
+                    className="justify-between text-lg"
                     onClick={cleanup}
                 >
                     {currentTab.title}
