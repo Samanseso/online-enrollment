@@ -10,6 +10,7 @@ export function SearchBar(props: SearchBarProps) {
                 <Search size={20} />
             </span>
             <Input
+                id="search-bar"
                 type="text"
                 placeholder="Search here"
                 className="pl-10"

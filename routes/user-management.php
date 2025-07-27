@@ -8,5 +8,5 @@ Route::middleware('auth')->group(function () {
     Route::redirect('user_management', '/user_management/students');
 
     Route::get('user_management/students', [StudentController::class, 'index'])->name('students.index');
-
+    Route::post('user_management/students', [StudentController::class, 'create'])->name('students.create');
 });

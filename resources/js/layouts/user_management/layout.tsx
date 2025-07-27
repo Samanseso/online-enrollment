@@ -10,6 +10,7 @@ import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { ColumnsMenu } from '@/components/columns-menu';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import CreateStudent from '@/components/create-student';
 
 
 
@@ -50,6 +51,8 @@ export default function UserManagementLayout({ columns, children, visibleColumns
 
     const isMobile = useIsMobile();
     const cleanup = useMobileNavigation();
+
+    
     
 
 
@@ -90,12 +93,7 @@ export default function UserManagementLayout({ columns, children, visibleColumns
                 <div className='flex items-center space-x-2'>
                     <SearchBar onChange={handleSearchBarChange} />
 
-                    <Button
-                        variant="outline"
-                        className='cursor-pointer'
-                    >
-                        Add {isMobile ? '' : 'Student'}
-                    </Button>
+                    <CreateStudent />
                 </div>
             </div>
 

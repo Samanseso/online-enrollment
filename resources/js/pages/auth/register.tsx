@@ -26,6 +26,7 @@ export default function Register() {
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
+        console.log(data)
         post(route('register'), {
             onFinish: () => reset('password', 'password_confirmation'),
         });

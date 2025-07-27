@@ -41,10 +41,11 @@ class ProfileController extends Controller
     }
 
     /**
-     * Delete the user's account.
+     * Delete the user's accouant.
      */
     public function destroy(Request $request): RedirectResponse
-    {
+    {   
+        
         $request->validate([
             'password' => ['required', 'current_password'],
         ]);

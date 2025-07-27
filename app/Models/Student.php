@@ -17,20 +17,19 @@ class Student extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'StudentID',
-        'FirstName',
-        'LastName',
-        'MiddleName',
-        'BirthDate',
-        'Gender',
-        'Email',
-        'ContactNumber',
-        'Address',
-        'Barangay',
-        'City',
-        'ProgramID',
-        'YearLevel',
-        'Status'
+        "first_name",
+        "last_name",
+        "middle_name",
+        "birth_date",
+        "gender",
+        "email",
+        "contact_number",
+        "address",
+        "barangay",
+        "city",
+        "program_id",
+        "year_level",
+        "status"
     ];
 
     

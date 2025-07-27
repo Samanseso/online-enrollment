@@ -28,7 +28,9 @@ const tableColumns = [
     'City',
     'Program Id',
     'Year Level',
-    'Status'
+    'Status',
+    'Created At',
+    'Updated At'
 ]
 
 const defaultColumns = [
@@ -43,9 +45,10 @@ const defaultColumns = [
 export default function Students() {
     const { students } = usePage<{ students: Student[] }>().props;
 
-    const [visibleColumns, setVisibleColumns] = useState<number[]>(JSON.parse(sessionStorage.getItem('visibleColumns') || '[]') || defaultColumns);
+    const [visibleColumns, setVisibleColumns] = useState<number[]>(JSON.parse(sessionStorage.getItem('visibleColumns') || '[]').length > 0 ? JSON.parse(sessionStorage.getItem('visibleColumns') || '[]') : defaultColumns);
     const [filteredStudents, setFilteredStudents] = useState<any[][]>(students.map(student => Object.values(student)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
     const [searchInput, setSearchInput] = useState('');
+
 
     useEffect(() => {
         sessionStorage.setItem('visibleColumns', JSON.stringify(visibleColumns));
