@@ -16,6 +16,10 @@ class Student extends Model
      *
      * @var list<string>
      */
+
+    protected $primaryKey = 'student_id';
+
+    
     protected $fillable = [
         "first_name",
         "last_name",

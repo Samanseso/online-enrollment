@@ -37,17 +37,14 @@ export default function CreateStudent() {
         year_level: '',
     });
 
-    const closeModal = () => {
-        clearErrors();
-        reset();
-    };
+    const closeModal = () => {};
 
     const [errors, setErrors] = useState<any>();
 
     const createStudent: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route('students.create'), {    
+        post(route('students.create', ), {    
             preserveScroll: true,
             onSuccess: () => closeModal(),
             onError: (err) => setErrors(err),                 
@@ -56,10 +53,6 @@ export default function CreateStudent() {
 
     };
 
-    
-    useEffect(() => {
-        console.log(errors)
-    }, [errors]);
     
     return (
         <div>

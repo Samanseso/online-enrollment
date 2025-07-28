@@ -1,11 +1,12 @@
 import AppLayout from "@/layouts/app-layout";
 import { BreadcrumbItem } from "@/types";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import { type Student } from "@/types";
 import UserManagementLayout from '../../layouts/user_management/layout';
 import { Tab } from "@headlessui/react";
 import { DataTable } from "@/components/data-table";
 import { useEffect, useState } from "react";
+import { DeleteStudent } from "@/components/delete-student";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -37,9 +38,10 @@ const defaultColumns = [
     0,
     1,
     2,
+    3,
     7,
+    12,
     13,
-    14,
 ]
 
 export default function Students() {
@@ -48,7 +50,18 @@ export default function Students() {
     const [visibleColumns, setVisibleColumns] = useState<number[]>(JSON.parse(sessionStorage.getItem('visibleColumns') || '[]').length > 0 ? JSON.parse(sessionStorage.getItem('visibleColumns') || '[]') : defaultColumns);
     const [filteredStudents, setFilteredStudents] = useState<any[][]>(students.map(student => Object.values(student)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
     const [searchInput, setSearchInput] = useState('');
+    const [studentToDelete, setStudentToDelete] = useState<string>('')
+    const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false)
 
+
+    const doDelete = (id: string) => {
+        setIsOpenDeleteModal(true);
+        setStudentToDelete(id)
+    }
+    
+
+
+    
 
     useEffect(() => {
         sessionStorage.setItem('visibleColumns', JSON.stringify(visibleColumns));
@@ -78,7 +91,9 @@ export default function Students() {
                     columns={tableColumns.filter((_, index) => visibleColumns.includes(index))}
                     data={filteredStudents}
                     searchInput={searchInput}
+                    doDelete={doDelete}
                 />
+                <DeleteStudent student_id={studentToDelete} isOpen={isOpenDeleteModal} setIsOpen={setIsOpenDeleteModal} />
             </UserManagementLayout>
         </AppLayout>
     );

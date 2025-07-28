@@ -27,16 +27,11 @@ class StudentController extends Controller
 
     public function create(Request $request): RedirectResponse {
 
-
-
-
-
         $validated = $request->validate([
             'first_name'  => 'required',
             'last_name'   => 'required',
             'middle_name' => 'required',
-            'birth_date' => 'required',
-            'gender' => 'required',
+
             'email' => 'required',
             'contact_number' => 'required',
             'address' => 'required',
@@ -48,6 +43,16 @@ class StudentController extends Controller
 
         Student::create($validated);
 
+        return redirect('user_management/students');
+    }
+
+    public function destroy(Student $student): RedirectResponse
+    {
+        // dd($student);
+        $student->delete();
+
+        // You can flash a message here if you like:
+        // session()->flash('success', 'Student deleted.');
 
         return redirect('user_management/students');
     }
