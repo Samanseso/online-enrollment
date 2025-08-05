@@ -45,18 +45,27 @@ class StudentController extends Controller
             'program_id' => 'required',
             'year_level' => 'required'
         ]);
+
+        $url = $request->header('referer'); 
+        $parsedUrl = parse_url($url);
+        parse_str($parsedUrl['query'], $queryParams);
+        $page = $queryParams['page'] ?? 1;
         
         $new_student = Student::create($validated);
         return redirect()
-            ->route('students.index')
+            ->route('students.index', ['page' => $page])
             ->with('new_student', $new_student->student_id);
     }
 
-    public function destroy(Student $student): RedirectResponse
+    public function destroy(Request $request, Student $student): RedirectResponse
     {     
+        $url = $request->header('referer'); 
+        $parsedUrl = parse_url($url);
+        parse_str($parsedUrl['query'], $queryParams);
+        $page = $queryParams['page'] ?? 1;
+
+
         $student->delete();
-        return redirect()->route('students.index');
+        return redirect()->route('students.index', ['page' => $page]);
     }
-
-
 }

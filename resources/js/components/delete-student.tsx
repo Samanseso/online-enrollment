@@ -34,7 +34,7 @@ export function DeleteStudent ({ student_id, isOpen, setIsOpen, updateTable }: D
 
     const deleteUser: FormEventHandler = (e) => {
         e.preventDefault();
-
+        const page = 2;
 
 
         destroy(route('students.destroy', { student_id }), {
