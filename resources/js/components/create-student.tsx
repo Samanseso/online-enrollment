@@ -1,26 +1,22 @@
 import { useForm } from '@inertiajs/react';
-import { FormEventHandler, useEffect, useRef, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 
-import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-
-import HeadingSmall from '@/components/heading-small';
-import { ChevronsUpDown } from 'lucide-react';
 
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { StudentForm } from '@/types';
-import { Select, SelectGroup } from './ui/select';
-import { SelectContent, SelectItem, SelectTrigger } from '@radix-ui/react-select';
-import { error } from 'console';
-import { FirstName } from './student-input/first-name';
-import { MiddleName } from './student-input/middle-name';
+import { PaginationType, Student, StudentForm } from '@/types';
 import { PersonalDetails } from './student-input/personal-details';
 import { ContactDetails } from './student-input/contact-details';
 import { AcademicDetails } from './student-input/academic-details';
+import { useModal } from './context/modal-context';
 
-export default function CreateStudent() {
+interface CreateStudentProps {
+    updateTable: (newStudents: PaginationType<Student[]>) => void;
+}
+
+const PROGRESS_LENGTH = 3;
+
+export default function CreateStudent({ updateTable }: CreateStudentProps) {
 
     const { data, setData, post, processing, reset, clearErrors } = useForm<Required<StudentForm>>({
         first_name: '',
@@ -37,55 +33,134 @@ export default function CreateStudent() {
         year_level: '',
     });
 
-    const closeModal = () => {};
+    
 
+    const [isOpen, setIsOpen] = useState(false);
+    const [progress, setProgress] = useState<number>(0);
     const [errors, setErrors] = useState<any>();
+    const { createModal } = useModal();
+
+    const progressComponents = [
+        <PersonalDetails data={data} setData={setData} errors={errors} setErrors={setErrors}  />,
+        <ContactDetails data={data} setData={setData} errors={errors} setErrors={setErrors}  />,
+        <AcademicDetails data={data} setData={setData} errors={errors} setErrors={setErrors}  />
+    ]
+
+    const closeModal = () => {
+        setIsOpen(false);
+        sessionStorage.removeItem("program");
+        sessionStorage.removeItem("level");
+        setProgress(0);
+        reset();
+    };
 
     const createStudent: FormEventHandler = (e) => {
         e.preventDefault();
-
         post(route('students.create', ), {    
+            preserveState: true,
             preserveScroll: true,
-            onSuccess: () => closeModal(),
-            onError: (err) => setErrors(err),                 
-            onFinish: () => reset(),
+            onSuccess: (page) => {
+                console.log(page)
+                if (page.props.hasNext) {
+                    handleNext()
+                }
+                else {
+                    setIsOpen(false);
+                    const data = {
+                        open: true,
+                        header: 'Student Created',  
+                        message: `Student #${page.props.new_student} has been created.`
+                    }
+                    
+                    createModal(data);
+
+                    if (page.props.students) {
+                        updateTable(page.props.students as PaginationType<Student[]>);
+                    }
+                }
+               
+            },
+            onError: (err) => {
+                setErrors(err);
+            },                 
+            onFinish: () => {},
         });
 
     };
+    
+    const handleNext = () => {
+        if (progress < PROGRESS_LENGTH - 1) {
+            setProgress(progress + 1);
+        }
+    }   
+
+    const handlePrev = () => {
+        if (progress > 0) {
+            setProgress(progress - 1);
+        }
+    }
+
+
+
 
     
     return (
-        <div>
-            <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="outline">Add Student</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-3xl">
-                        <DialogTitle>Create Student</DialogTitle>
-                        <DialogDescription>
-                            Fill in the details to create a new student account.
-                        </DialogDescription>
-                        <form className="space-y-6" onSubmit={createStudent}>
-                            <div className="flex flex-col gap-5 mt-5 mb-15">
-                                <PersonalDetails data={data} setData={setData} errors={errors} setErrors={setErrors}  />
-                                <ContactDetails data={data} setData={setData} errors={errors} setErrors={setErrors}  />
-                                <AcademicDetails data={data} setData={setData} errors={errors} setErrors={setErrors}  />
-                            </div>
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline">Add Student</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-3xl">
+                <DialogTitle>Create Student</DialogTitle>
+                <DialogDescription>
+                    Fill in the details to create a new student account.
+                </DialogDescription>
+                <form className="space-y-6" onSubmit={createStudent}>
+       
+                    <div className="flex flex-col gap-5 mt-5 mb-15">
+                        {progressComponents[progress]}
+                    </div>
 
-                            <DialogFooter className="gap-2">
-                                <DialogClose asChild>
-                                    <Button variant="secondary" className='cursor-pointer' onClick={closeModal}>
-                                        Cancel
-                                    </Button>
-                                </DialogClose>
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
-                                <Button variant="ghost" className='bg-blue-600 text-white hover:bg-blue-400 hover:text-white' disabled={processing} asChild>
-                                    <button type="submit" className='cursor-pointer'>Create account</button>
-                                </Button>
-                            </DialogFooter>
-                        </form>
-                    </DialogContent>
-                </Dialog>
-        </div>
+                    <DialogFooter className="gap-2">
+                        <DialogClose asChild>
+                            <Button variant="secondary" className='cursor-pointer' onClick={closeModal}>
+                                Cancel
+                            </Button>
+                        </DialogClose>
+
+                        <Button variant="outline" className='cursor-pointer' disabled={progress === 0} asChild>
+                            <button type="button" onClick={handlePrev}>Previous</button>
+                        </Button>
+
+                        <Button variant="ghost" className={
+                                progress === PROGRESS_LENGTH - 1 ? "hidden" : 
+                                "bg-blue-600 text-white hover:bg-blue-400 hover:text-white cursor-pointer"
+                            } 
+                            onClick={handleNext}
+                            asChild
+                        >
+                            <button type="button">
+                                Next
+                            </button>
+                        </Button>
+                    
+                        <Button variant="ghost" className={
+                                progress === PROGRESS_LENGTH - 1 ? "bg-blue-600 text-white hover:bg-blue-400 hover:text-white cursor-pointer" : 
+                                "hidden"
+                            }  
+                            disabled={processing} 
+                            asChild
+                        >
+                            <button type="submit">
+                                Create account
+                            </button>
+                        </Button>
+                    </DialogFooter>
+
+                </form>
+            </DialogContent>
+        </Dialog>
+        
     );
 }

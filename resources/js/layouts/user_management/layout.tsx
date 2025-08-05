@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { useState, type PropsWithChildren } from 'react';
+import { ReactElement, useState, type PropsWithChildren } from 'react';
 import { type TabItem } from '@/types';
 import { LargeTableTab, SmallTableTab } from '@/components/table-tab';
 import { SearchBar } from '@/components/search-bar';
@@ -39,22 +39,18 @@ interface UserManagementLayoutProps {
     visibleColumns: number[];
     setSearchInput: React.Dispatch<React.SetStateAction<string>>;
     setVisibleColumns: React.Dispatch<React.SetStateAction<number[]>>;
+    createComponent: ReactElement;
 }
 
 
-export default function UserManagementLayout({ columns, children, visibleColumns, setSearchInput, setVisibleColumns }: PropsWithChildren<UserManagementLayoutProps>) {
+export default function UserManagementLayout({ columns, children, visibleColumns, setSearchInput, setVisibleColumns, createComponent }: PropsWithChildren<UserManagementLayoutProps>) {
     // When server-side rendering, we only render the layout on the client...
     if (typeof window === 'undefined') {
         return null;
     }
 
-
     const isMobile = useIsMobile();
     const cleanup = useMobileNavigation();
-
-    
-    
-
 
     const handleSearchBarChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         // Handle search bar input change
@@ -80,7 +76,7 @@ export default function UserManagementLayout({ columns, children, visibleColumns
                                 </Button>
                             </DropdownMenuTrigger>
 
-                            <DropdownMenuContent 
+                            <DropdownMenuContent
                                 className="w-40 mt-1 p-2 rounded-xl border border-white/5 bg-white shadow"
                                 align='start'
                             >
@@ -93,11 +89,11 @@ export default function UserManagementLayout({ columns, children, visibleColumns
                 <div className='flex items-center space-x-2'>
                     <SearchBar onChange={handleSearchBarChange} />
 
-                    <CreateStudent />
+                    {createComponent}
                 </div>
             </div>
 
-            <div className="w-full mt-4">
+            <div className="table-here w-full mt-4">
                 <section className="w-full">{children}</section>
             </div>
 

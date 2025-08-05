@@ -27,21 +27,23 @@ const levels = {
 };
 
 
-export function YearLevel ( props: YearLevelProps ) {
-    const [value, setValue] = useState("");
+export function YearLevel ( props: YearLevelProps ) {   
+    const [value, setValue] = useState(Object.keys(levels)[parseInt(sessionStorage.getItem("level") || "") ?? ""]);
+
     return (
         <InputContainer error={props.error}>
             <Select value={value} onValueChange={(val) => {
                 props.setData('year_level', val);
-                setValue(val)
+                setValue(val);
+                sessionStorage.setItem("level", val);
             }}>
-                <SelectTrigger>
+                <SelectTrigger className='cursor-pointer'>
                     <SelectValue placeholder="Year Level" />
                 </SelectTrigger>
 
                 <SelectContent>
                     {Object.entries(levels).map(([id, level]) => (
-                        <SelectItem key={id} value={id}>
+                        <SelectItem key={id} value={id} className='cursor-pointer'>
                             {level}
                         </SelectItem>
                     ))}

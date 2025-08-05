@@ -1,12 +1,16 @@
 import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem } from "@/types";
-import { Head, useForm, usePage } from "@inertiajs/react";
+import { BreadcrumbItem, PaginationType } from "@/types";
+import { Head, usePage } from "@inertiajs/react";
 import { type Student } from "@/types";
 import UserManagementLayout from '../../layouts/user_management/layout';
 import { Tab } from "@headlessui/react";
 import { DataTable } from "@/components/data-table";
 import { useEffect, useState } from "react";
 import { DeleteStudent } from "@/components/delete-student";
+import { useModal } from "@/components/context/modal-context";
+import { Modal } from "@/components/modal";
+import CreateStudent from "@/components/create-student";
+import { Pagination } from "@/components/pagination";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -45,23 +49,26 @@ const defaultColumns = [
 ]
 
 export default function Students() {
-    const { students } = usePage<{ students: Student[] }>().props;
+    const { props } = usePage<{ students: PaginationType<Student[]> }>();
 
+    const [students, setStudents] = useState<Student[]>(props.students.data);
     const [visibleColumns, setVisibleColumns] = useState<number[]>(JSON.parse(sessionStorage.getItem('visibleColumns') || '[]').length > 0 ? JSON.parse(sessionStorage.getItem('visibleColumns') || '[]') : defaultColumns);
-    const [filteredStudents, setFilteredStudents] = useState<any[][]>(students.map(student => Object.values(student)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
+    const [filteredStudents, setFilteredStudents] = useState<Student[][]>(students.map(student => Object.values(student)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
     const [searchInput, setSearchInput] = useState('');
-    const [studentToDelete, setStudentToDelete] = useState<string>('')
-    const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false)
+    const [studentToDelete, setStudentToDelete] = useState<string>('');
+    const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
 
+    const { content } = useModal();
 
     const doDelete = (id: string) => {
         setIsOpenDeleteModal(true);
         setStudentToDelete(id)
     }
     
+    const updateTable = (newStudents: PaginationType<Student[]>) => {
+        setStudents(newStudents.data);
+    }
 
-
-    
 
     useEffect(() => {
         sessionStorage.setItem('visibleColumns', JSON.stringify(visibleColumns));
@@ -78,22 +85,35 @@ export default function Students() {
                         );
 		});
 		setFilteredStudents(newFilteredStudents);
-    }, [visibleColumns, searchInput])
-
+    }, [students, visibleColumns, searchInput])
 
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Student List" />
-
-            <UserManagementLayout setSearchInput={setSearchInput} columns={tableColumns} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns}> 
+            <UserManagementLayout 
+                setSearchInput={setSearchInput} 
+                columns={tableColumns} 
+                visibleColumns={visibleColumns} 
+                setVisibleColumns={setVisibleColumns}
+                createComponent={<CreateStudent updateTable={updateTable}/>}
+            > 
                 <DataTable
                     columns={tableColumns.filter((_, index) => visibleColumns.includes(index))}
                     data={filteredStudents}
                     searchInput={searchInput}
                     doDelete={doDelete}
                 />
-                <DeleteStudent student_id={studentToDelete} isOpen={isOpenDeleteModal} setIsOpen={setIsOpenDeleteModal} />
+
+                <Pagination data={props.students} />
+
+                <DeleteStudent 
+                    student_id={studentToDelete} 
+                    isOpen={isOpenDeleteModal} 
+                    setIsOpen={setIsOpenDeleteModal} 
+                    updateTable={updateTable}/>
+                
+                <Modal content={content} />
             </UserManagementLayout>
         </AppLayout>
     );
