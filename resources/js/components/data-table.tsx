@@ -9,9 +9,10 @@ interface DataTableProps {
 	data: any[][];
 	searchInput: string;
 	doDelete: (id: string) => void;
+	doView: (id: string) => void;
 }
 
-export function DataTable ({ columns, data, searchInput, doDelete }: DataTableProps) {
+export function DataTable ({ columns, data, searchInput, doDelete, doView }: DataTableProps) {
 
 	const [filteredData, setFilteredData] = useState(data);
 	const [selectedData, setSelectedData] = useState<number[]>([]);
@@ -77,10 +78,10 @@ export function DataTable ({ columns, data, searchInput, doDelete }: DataTablePr
 								))}
 								<td>
 									<div className="flex items-center justify-center space-x-1">
-										<Button variant="ghost" size="icon">
+										<Button variant="ghost" size="icon" onClick={() => doView(row[0])}>
 											<Eye className="size-4" color="black" />
 										</Button>
-										<Button variant="ghost" size="icon">
+										<Button variant="ghost" size="icon" >
 											<SquarePen className="size-4" color="blue" />
 										</Button>
 										<Button variant="ghost" size="icon" onClick={() => doDelete(row[0])}>

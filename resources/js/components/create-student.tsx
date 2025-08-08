@@ -83,7 +83,9 @@ export default function CreateStudent({ updateTable }: CreateStudentProps) {
             onError: (err) => {
                 setErrors(err);
             },                 
-            onFinish: () => {},
+            onFinish: () => {
+                closeModal();
+            },
         });
 
     };

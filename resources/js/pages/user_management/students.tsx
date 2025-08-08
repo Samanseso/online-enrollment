@@ -11,6 +11,7 @@ import { useModal } from "@/components/context/modal-context";
 import { Modal } from "@/components/modal";
 import CreateStudent from "@/components/create-student";
 import { Pagination } from "@/components/pagination";
+import { ViewStudent } from "@/components/view-student";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -55,14 +56,20 @@ export default function Students() {
     const [visibleColumns, setVisibleColumns] = useState<number[]>(JSON.parse(sessionStorage.getItem('visibleColumns') || '[]').length > 0 ? JSON.parse(sessionStorage.getItem('visibleColumns') || '[]') : defaultColumns);
     const [filteredStudents, setFilteredStudents] = useState<Student[][]>(students.map(student => Object.values(student)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
     const [searchInput, setSearchInput] = useState('');
-    const [studentToDelete, setStudentToDelete] = useState<string>('');
+    const [selectedStudent, setSelectedStudent] = useState<string>('');
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
+    const [isOpenViewModal, setIsOpenViewModal] = useState<boolean>(false);
 
     const { content } = useModal();
 
     const doDelete = (id: string) => {
         setIsOpenDeleteModal(true);
-        setStudentToDelete(id)
+        setSelectedStudent(id)
+    }
+
+    const doView = (id: string) => {
+        setIsOpenViewModal(true);
+        setSelectedStudent(id)
     }
     
     const updateTable = (newStudents: PaginationType<Student[]>) => {
@@ -103,15 +110,22 @@ export default function Students() {
                     data={filteredStudents}
                     searchInput={searchInput}
                     doDelete={doDelete}
+                    doView={doView}
                 />
 
                 <Pagination data={props.students} />
 
                 <DeleteStudent 
-                    student_id={studentToDelete} 
+                    student_id={selectedStudent} 
                     isOpen={isOpenDeleteModal} 
                     setIsOpen={setIsOpenDeleteModal} 
                     updateTable={updateTable}/>
+                
+                <ViewStudent
+                    student_id={selectedStudent}
+                    isOpen={isOpenViewModal}
+                    setIsOpen={setIsOpenViewModal}
+                />
                 
                 <Modal content={content} />
             </UserManagementLayout>

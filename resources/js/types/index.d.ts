@@ -49,7 +49,6 @@ export interface User {
 }
 
 export interface Student {
-    name: string;
     id: string;
     first_name: string;
     last_name: string;

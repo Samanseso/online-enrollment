@@ -36,7 +36,6 @@ export function DeleteStudent ({ student_id, isOpen, setIsOpen, updateTable }: D
         e.preventDefault();
         const page = 2;
 
-
         destroy(route('students.destroy', { student_id }), {
             preserveScroll: true,
             preserveState: true,

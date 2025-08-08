@@ -17,21 +17,33 @@ class StudentController extends Controller
     /**
      * Show the student list page.
      */
+
+    public function get_current_page(Request $request) {
+        $url = $request->header('referer'); 
+        $parsedUrl = parse_url($url);
+        $queryString = isset($parsedUrl['query']) ? $parsedUrl['query'] : 'page=1';
+        parse_str($queryString, $queryParams);
+        $page = $queryParams['page'] ?? 1;
+
+        return $page;
+    }
     public function index(Request $request)
     {
-
-
         return Inertia::render('user_management/students', [
             'students' => Student::paginate(12),
-            'new_student' => session('new_student')
+            'new_student' => session('new_student'),
+            'view_student' => session('view_student')
         ]);
+    }
+
+    public function retrieve (Student $student) {
+        return redirect()
+            ->route('students.index')
+            ->with('view_student', $student);
     }
 
     public function create(Request $request) 
     {
-
-        
-
         //dd($request->all());
         $validated = $request->validate([
             'first_name'  => 'required',
@@ -46,11 +58,7 @@ class StudentController extends Controller
             'year_level' => 'required'
         ]);
 
-        $url = $request->header('referer'); 
-        $parsedUrl = parse_url($url);
-        parse_str($parsedUrl['query'], $queryParams);
-        $page = $queryParams['page'] ?? 1;
-        
+        $page = $this->get_current_page($request);
         $new_student = Student::create($validated);
         return redirect()
             ->route('students.index', ['page' => $page])
@@ -61,7 +69,8 @@ class StudentController extends Controller
     {     
         $url = $request->header('referer'); 
         $parsedUrl = parse_url($url);
-        parse_str($parsedUrl['query'], $queryParams);
+        $queryString = isset($parsedUrl['query']) ? $parsedUrl['query'] : 'page=1';
+        parse_str($queryString, $queryParams);
         $page = $queryParams['page'] ?? 1;
 
 

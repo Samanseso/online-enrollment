@@ -4,6 +4,8 @@ import { MiddleName } from "./middle-name";
 import { useForm } from "@inertiajs/react";
 import { SetStateAction } from 'react';
 import { LastName } from './last-name';
+import { Birthday } from './birthday';
+import { Gender } from './gender';
 
 
 type FormType = ReturnType<typeof useForm<Required<StudentForm>>>;
@@ -18,12 +20,9 @@ interface PersonalDetailsProps {
 
 export function PersonalDetails({ data, setData, errors, setErrors } : PersonalDetailsProps) {
     return (
-        <div>
-            <p className='mb-2 text-sm my-2 font-medium'>
-                Personal Information
-            </p> 
-            
-            <div className="grid grid-cols-3 gap-2">
+        <div className=''>
+        
+            <div className="grid grid-cols-3 space-x-3 mb-5">
                 <FirstName 
                     error={errors?.first_name || ""}
                     value={data.first_name || ""}
@@ -51,6 +50,29 @@ export function PersonalDetails({ data, setData, errors, setErrors } : PersonalD
                         setErrors(newError);
                     }}/>
             </div>
+
+            <div className="flex space-x-3">
+                <Birthday 
+                    error={errors?.birthday || ""}
+                    onChange={(e) => {
+                        console.log(e.target.value)
+                        setData('birthday', e.target.value)
+                        const newError = { ...errors, first_name: ""}
+                        setErrors(newError);
+                    }}
+                />
+
+                <Gender
+                    error={errors?.gender || ""}
+                    value={data.gender || ""}
+                    setData={setData}
+                    onChange={() => {
+                        const newError = { ...errors, gender: ""}
+                        setErrors(newError);
+                    }}/>
+            </div>
+
+            
         </div>
     )
 }
