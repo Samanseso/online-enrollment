@@ -27,6 +27,7 @@ class StudentController extends Controller
 
         return $page;
     }
+
     public function index(Request $request)
     {
         return Inertia::render('user_management/students', [
@@ -36,9 +37,10 @@ class StudentController extends Controller
         ]);
     }
 
-    public function retrieve (Student $student) {
+    public function retrieve (Request $request, Student $student) {
+        $page = $this->get_current_page($request);
         return redirect()
-            ->route('students.index')
+            ->route('students.index',  ['page' => $page])
             ->with('view_student', $student);
     }
 
@@ -67,13 +69,7 @@ class StudentController extends Controller
 
     public function destroy(Request $request, Student $student): RedirectResponse
     {     
-        $url = $request->header('referer'); 
-        $parsedUrl = parse_url($url);
-        $queryString = isset($parsedUrl['query']) ? $parsedUrl['query'] : 'page=1';
-        parse_str($queryString, $queryParams);
-        $page = $queryParams['page'] ?? 1;
-
-
+        $page = $this->get_current_page($request);
         $student->delete();
         return redirect()->route('students.index', ['page' => $page]);
     }
