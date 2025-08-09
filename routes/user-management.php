@@ -15,6 +15,8 @@ Route::middleware('auth')->group(function () {
     Route::get('user_management/faculties', [FacultyController::class, 'index'])->name('faculties.index');
     Route::get('user_management/registrars', [RegistrarController::class, 'index'])->name('registrars.index');
     Route::post('user_management/students', [StudentController::class, 'create'])->name('students.create');
-    
+    Route::post('user_management/faculties', [FacultyController::class, 'create'])->name('faculties.create');
+
     Route::delete('user_management/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+    Route::delete('user_management/faculties/{faculty}', [FacultyController::class, 'destroy'])->name('faculties.destroy');
 });

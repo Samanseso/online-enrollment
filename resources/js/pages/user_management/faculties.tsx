@@ -1,11 +1,15 @@
 import AppLayout from "@/layouts/app-layout";
-import { BreadcrumbItem } from "@/types";
+import { BreadcrumbItem, Faculty, PaginationType } from "@/types";
 import { Head, usePage } from "@inertiajs/react";
 import { type Student } from "@/types";
 import UserManagementLayout from '../../layouts/user_management/layout';
 import { DataTable } from "@/components/data-table";
 import { useEffect, useState } from "react";
 import { DeleteStudent } from "@/components/delete-student";
+import CreateFaculty from "@/components/create-faculty";
+import { Modal } from "@/components/modal";
+import { useModal } from "@/components/context/modal-context";
+import { DeleteFaculty } from "@/components/delete-faculty";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -36,28 +40,32 @@ const defaultColumns = [
 ];
 
 export default function Faculties() {
-    const { faculties } = usePage<{ faculties: Student[] }>().props;
+    const { props } = usePage<{ faculties: PaginationType<Faculty[]> }>();
 
     const [visibleColumns, setVisibleColumns] = useState<number[]>(
         JSON.parse(sessionStorage.getItem('visibleColumns') || '[]').length > 0
             ? JSON.parse(sessionStorage.getItem('visibleColumns') || '[]')
             : defaultColumns
     );
+    
 
-    const [filteredFaculties, setFilteredFaculties] = useState<any[][]>(
-        faculties
-            .map(faculty => Object.values(faculty))
-            .map(row => row.filter((_, index) => visibleColumns.includes(index)))
-    );
-
+    const [faculties, setFaculty] = useState<Faculty[]>(props.faculties.data);
+    const [filteredFaculties, setFilteredFaculties] = useState<Faculty[][]>(faculties.map(faculty => Object.values(faculty)).map(row => row.filter((_, index) => visibleColumns.includes(index))));
     const [searchInput, setSearchInput] = useState('');
-    const [studentToDelete, setStudentToDelete] = useState<string>('');
+    const [facultyToDelete, setFacultyToDelete] = useState<string>('');
     const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
+    const [selectedFaculty, setSelectedFaculty] = useState<string>('');
+
+    const updateTable = (newfaculty: PaginationType<Faculty[]>) => {
+            setFaculty(newfaculty.data);
+        }
 
     const doDelete = (id: string) => {
         setIsOpenDeleteModal(true);
-        setStudentToDelete(id);
+        setFacultyToDelete(id);
     };
+
+    const { content  } = useModal()
 
     useEffect(() => {
         sessionStorage.setItem('visibleColumns', JSON.stringify(visibleColumns));
@@ -80,6 +88,7 @@ export default function Faculties() {
             <Head title="Faculty List" />
 
             <UserManagementLayout
+            createComponent={<CreateFaculty updateTable={updateTable}/>}
                 setSearchInput={setSearchInput}
                 columns={tableColumns}
                 visibleColumns={visibleColumns}
@@ -90,12 +99,10 @@ export default function Faculties() {
                     data={filteredFaculties}
                     searchInput={searchInput}
                     doDelete={doDelete}
+                    doView={(id : string) => {}}
                 />
-                <DeleteStudent
-                    student_id={studentToDelete}
-                    isOpen={isOpenDeleteModal}
-                    setIsOpen={setIsOpenDeleteModal}
-                />
+                <DeleteFaculty faculty_id={facultyToDelete}  updateTable={updateTable} isOpen={isOpenDeleteModal} setIsOpen={setIsOpenDeleteModal}/>
+                <Modal content={content}/>
             </UserManagementLayout>
         </AppLayout>
     );

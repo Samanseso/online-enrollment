@@ -1,6 +1,7 @@
 import { LucideIcon } from 'lucide-react';
 import type { Config } from 'ziggy-js';
 import StudentList from '../pages/user_management/students';
+import Register from '@/pages/auth/register';
 
 export interface Auth {
     user: User;
@@ -65,6 +66,15 @@ export interface Student {
     status: string;
 }
 
+export interface Faculty {
+    faculty_id: string;
+    first_name: string;
+    last_name: string;
+   created_at: string;
+   updated_at: string;
+
+}
+
 export interface StudentForm {
     first_name: string;
     last_name: string;
@@ -79,6 +89,19 @@ export interface StudentForm {
     program_id: string;
     year_level: string;
     [key: string]: any;
+}
+
+export interface FacultyForm {
+    first_name: string;
+    last_name: string;
+}
+
+export interface Registrar {
+    registrar_id: string;
+    first_name: string;
+    last_name: string;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface TabItem {

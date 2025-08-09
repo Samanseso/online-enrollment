@@ -18,6 +18,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const tableColumns = [
     'Id',
     'First Name',
+    'last_name',
     'Created At',
     'Updated At'
 ]
@@ -74,14 +75,14 @@ export default function Registrar() {
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Student List" />
 
-            <UserManagementLayout setSearchInput={setSearchInput} columns={tableColumns} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns}> 
+            <UserManagementLayout createComponent={null} setSearchInput={setSearchInput} columns={tableColumns} visibleColumns={visibleColumns} setVisibleColumns={setVisibleColumns}> 
                 <DataTable
                     columns={tableColumns.filter((_, index) => visibleColumns.includes(index))}
                     data={filteredRegistrar}
                     searchInput={searchInput}
                     doDelete={doDelete}
+                    doView={(id : string) => {}}
                 />
-                <DeleteStudent student_id={registrarToDelete} isOpen={isOpenDeleteModal} setIsOpen={setIsOpenDeleteModal} />
             </UserManagementLayout>
         </AppLayout>
     );<s></s>

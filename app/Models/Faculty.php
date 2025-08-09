@@ -17,23 +17,12 @@ class Faculty extends Model
      * @var list<string>
      */
 
-    protected $primaryKey = 'student_id';
+    protected $primaryKey = 'faculty_id';
 
     
     protected $fillable = [
         "first_name",
-        "last_name",
-        "middle_name",
-        "birth_date",
-        "gender",
-        "email",
-        "contact_number",
-        "address",
-        "barangay",
-        "city",
-        "program_id",
-        "year_level",
-        "status"
+        "last_name"
     ];
 
     

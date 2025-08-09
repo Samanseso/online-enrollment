@@ -39,7 +39,7 @@ interface UserManagementLayoutProps {
     visibleColumns: number[];
     setSearchInput: React.Dispatch<React.SetStateAction<string>>;
     setVisibleColumns: React.Dispatch<React.SetStateAction<number[]>>;
-    createComponent: ReactElement;
+    createComponent: ReactElement |null;
 }
 
 

@@ -71,6 +71,7 @@ class StudentController extends Controller
     {     
         $page = $this->get_current_page($request);
         $student->delete();
+        
         return redirect()->route('students.index', ['page' => $page]);
     }
 }
