@@ -34,12 +34,14 @@ const programs = {
 
 
 export function Program ( props: ProgramProps ) {
-    const [value, setValue] = useState("");
+    const [value, setValue] = useState(Object.keys(programs)[parseInt(sessionStorage.getItem("program") || "") ?? ""]);
+
     return (
         <InputContainer error={props.error}>
             <Select value={value} onValueChange={(val) => {
                 props.setData('program_id', val);
                 setValue(val)
+                sessionStorage.setItem('program', val)
             }}>
                 <SelectTrigger>
                     <SelectValue placeholder="Select program" />

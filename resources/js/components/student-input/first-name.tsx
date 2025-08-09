@@ -11,18 +11,17 @@ interface FirstNameProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export function FirstName ( props: FirstNameProps) {
     return (
         <InputContainer error={props.error}>
+            <Label htmlFor="first_name" className="mb-2">
+                First Name
+            </Label>
             <Input
                 id="first_name"
                 type="text"
                 name="first_name"
                 {...props}
                 
-                placeholder="First Name"
+                placeholder="Juan"
             />
-
-            <Label htmlFor="first_name" className="sr-only">
-                First Name
-            </Label>
         </InputContainer>
     )
 }

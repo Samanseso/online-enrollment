@@ -11,18 +11,17 @@ interface MiddleNameProps extends React.InputHTMLAttributes<HTMLInputElement> {
 export function MiddleName ( props: MiddleNameProps) {
     return (
         <InputContainer error={props.error}>
+            <Label htmlFor="middle_name" className="mb-2">
+                Middle Name
+            </Label>
             <Input
                 id="middle_name"
                 type="text"
                 name="middle_name"
                 {...props}
 
-                placeholder="Middle Name"
+                placeholder="Santos"
             />
-
-            <Label htmlFor="middle_name" className="sr-only">
-                First Name
-            </Label>
         </InputContainer>
     )
 }
