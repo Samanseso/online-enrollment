@@ -5,6 +5,14 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose, Dia
 import { Button } from "./ui/button";
 import { useForm } from "@inertiajs/react";
 import { Student } from "@/types";
+import { PlaceholderPattern } from "./ui/placeholder-pattern";
+import { ViewStudentPersonal } from "./view-student-personal";
+
+import { Ellipsis } from "lucide-react";
+import { Toggle } from "./ui/toggle";
+import { ToggleGroup } from "./ui/toggle-group";
+import { ToggleGroupItem } from "@radix-ui/react-toggle-group";
+import ViewStudentTabs from "./view-student-tabs";
 
 
 interface ViewStudentProps {
@@ -18,6 +26,7 @@ interface ViewStudentProps {
 export function ViewStudent({ student_id, isOpen, setIsOpen }: ViewStudentProps) {
 
     const [studentInfo, setStudentInfo] = useState<Student | null>(null)
+    const [value, setValue] = useState<string>("")
 
     const { get, processing, reset, errors, clearErrors } = useForm({});
   
@@ -33,35 +42,42 @@ export function ViewStudent({ student_id, isOpen, setIsOpen }: ViewStudentProps)
     }
 
     useEffect(() => {
-        if (student_id) {
-            getStudent();
-        }
-    },[student_id]);
-
-    useEffect(() => {
         if (!isOpen) {
             setStudentInfo(null);
         }
-    }, [isOpen])
-
+        else {
+            getStudent();
+        }
+    }, [isOpen]);
     
-
+    const placeholder = 
+        <div className="relative overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border min-h-[45vh]">
+            <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
+        </div>
+        
+    
         
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <DialogContent>
-                <DialogTitle>Student #{student_id}</DialogTitle>
-                    <DialogDescription>
-                        {studentInfo?.first_name}
-                    </DialogDescription>
-                    
-                    <DialogFooter className="gap-2">
-                        <DialogClose asChild>
-                            <Button variant="secondary">
-                                Cancel
-                            </Button>
-                        </DialogClose>
-                    </DialogFooter>
+            <DialogContent className="min-w-3xl">
+                <DialogTitle className="hidden" />
+                <DialogDescription className="hidden"/>
+
+                <div>
+                    <ViewStudentTabs className=""/>
+                </div>
+
+                <div className="min-h-[45vh]">
+                    {studentInfo ? <ViewStudentPersonal student={studentInfo}/> : placeholder}
+                </div>
+                  
+                <DialogFooter className="h-fit">
+                    <DialogClose asChild>
+                        <Button variant="secondary">
+                            Close
+                        </Button>
+                    </DialogClose>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     )

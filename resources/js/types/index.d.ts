@@ -49,7 +49,7 @@ export interface User {
 }
 
 export interface Student {
-    id: string;
+    student_id: string;
     first_name: string;
     last_name: string;
     middle_name: string;

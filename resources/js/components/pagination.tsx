@@ -43,7 +43,7 @@ export function Pagination ({ data }: PaginationProps) {
     const visiblePages = getVisiblePages(data.links, data.current_page, data.last_page, 1);
 
     return (        
-        <div className="flex justify-between absolute bottom-6 left-1/2 transform -translate-x-1/2 pr-8 space-x-10">
+        <div className="flex justify-between absolute bottom-6 right-0 pr-8 space-x-10">
             {/* I don't know why but pr-8 works ------------------------^ */}
             <div>
                 <Link href={data.prev_page_url ?? ""}>
