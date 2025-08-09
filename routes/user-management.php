@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Users\StudentController;
 use App\Http\Controllers\Users\FacultyController;
+use App\Http\Controllers\Users\RegistrarController;
 use Inertia\Inertia;
 
 Route::middleware('auth')->group(function () {
@@ -10,7 +11,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('user_management/students', [StudentController::class, 'index'])->name('students.index');
     Route::get('user_management/faculties', [FacultyController::class, 'index'])->name('faculties.index');
-
+    Route::get('user_management/registrars', [RegistrarController::class, 'index'])->name('registrars.index');
     Route::post('user_management/students', [StudentController::class, 'create'])->name('students.create');
     Route::delete('user_management/students/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
 

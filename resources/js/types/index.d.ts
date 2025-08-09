@@ -49,7 +49,6 @@ export interface User {
 }
 
 export interface Student {
-    name: string;
     id: string;
     first_name: string;
     last_name: string;
@@ -86,3 +85,12 @@ export interface TabItem {
     title: string;
     href: string;
 }
+
+export interface Registrar {
+    id: string;
+    first_name: string;
+    created_at: string;
+    updated_at: string;
+
+}
+
